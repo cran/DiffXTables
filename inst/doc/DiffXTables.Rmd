@@ -1,0 +1,264 @@
+---
+title: "Using the 'DiffXTables' R package to detect heterogeneity"
+author: "Ruby Sharma and Joe Song"
+date: "Created October 22, 2019"
+output: rmarkdown::html_vignette
+  #pdf_document:
+    #latex_engine: xelatex
+vignette: >
+  %\VignetteIndexEntry{Using the 'DiffXTables' R package to detect heterogeneity}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<!--This package is useful in multidisciplinary research areas, any two or more experimental conditions can be tested to check if they are differential from one another.-->
+
+The quesiton that whether the relationship between two variables has changed across conditions is often fundamental to a scientific inquiry. For example, a biologist could ask whether the relationship between two genes in a cancer cell has been modified from a normal cell. The 'DiffXTables' R package answers such questions via evaluating the statistical evidence of distributional changes in the involved variables from data.
+
+Given multiple contingency tables of the same dimensions, 'DiffXTables' offers three methods `cp.chisq.test()`, `sharma.song.test()`, and `heterogenity.test()` to test whether the distributions underlying the tables are different. All three tests use the chi-squared distribution to calculate a p-value to indicate the statistical significance of any detected difference across the tables. However, these tests behave sharply different for various types of pattern heterogeneity present in the input tables. Here, we define pattern types, explain the three tests, and illustrate their similarity and difference by examples. The examples reveal some inadequacy of the current textbook solution to the contingency table heterogeneity question.
+
+<!--second order (joint distribution or interaction) differential, first order (marginally) differential or both.-->
+
+
+## Types of pattern
+
+A _pattern_ is a contingency table tabulating the counts or frequencies observed for a pair of discrete random variables. We study the distributional differences across tables collected from more than one conditions.
+
+* _First-order differential patterns_: Some or all pairs of input tables differ only in marginal distributions of either row or column variables. Other pairs share the same underlying joint distribution.
+
+<!-- $X_k$ and $Y_k$.-->
+
+* _Second-order differential patterns_: 
+Some or all pairs of input tables differ in joint distributions not attributed to any difference in marginal distributions.
+
+<!-- Differences in relationship $X_k \to Y_k$ (interaction) or joint distriution in $K$ conditions.-->
+
+* _Differential patterns_: Some or all pairs of tables differ in joint distributions.
+
+* _Conserved patterns_: All tables share the same joint distributions.
+
+<!-- in $X_k \to Y_k$ relationship.-->
+
+## The three tests of distributional differences across tables
+
+The input to all three tests is two or more contingency tables. The output is chi-squared test statistics, their degrees of freedom, and _p_-values. They also share the same null hypothesis H0 that all tables are conserved in distributions. However, these tests answer distinct alternative hypotheses.
+
+### 1. The comparative chi-squared test
+
+<!--Given two or more contingency tables as parameter x, `cp.chisq.test()` will provide two quantities to evaluate if the tables has any kind of differentialilty (first, second or both). It includes the comparative chi-square test statistic and statistical significance ($p$-value)-->
+
+Alternative hypothesis H1: Patterns represented by the tables are **differential**.
+
+The statistical foundation of this test is first established in [<doi:10.1093/nar/gku086>](https://doi.org/10.1093/nar/gku086) and the test is then extended to identify differential patterns in networks [<doi:10.1093/nar/gkv358>](https://doi.org/10.1093/nar/gkv358).
+
+It is implemented as the R function `cp.chisq.test()` in this package.
+
+
+### 2. The Sharma-Song test 
+
+Alternative hypothesis H2: Patterns represented by the tables are **second-order differential**.
+
+A manuscript describing the theoretical foundation of this test is being submitted for peer review.
+
+It is implemented as the R function `sharma.song.test()` in this package.
+
+<!--
+Given two or more contingency tables as parameter x, `sharma.song.test()` will provide two quantities to evaluate if the tables are second order differential. It includes the sharma-song test statistic and statistical significance ($p$-value)
+-->
+
+### 3. The heterogeneity test
+
+<!--
+Given two or more contingency tables as parameter x, `heterogenity.test()`  will provide two quantities to evaluate if the tables are first order differential or second order differential but not always. It includes the heterogeinty test statistic and statistical significance ($p$-value)
+-->
+
+Alternative hypothesis H1: Patterns represented by the tables are **differential**. 
+
+This test is described in (Zar, 2010). Although it widely appears in textbooks, we demonstrate that it is not always powerful in some examples below.
+
+It is implemented as the R function `heterogenity.test()` in this package.
+
+<!--The Sharma-Song test promotes second order differential patterns whereas demotes first order differential patterns.-->
+
+<!--
+Table: **Is a method recommended for different tasks?**
+
+--------------------------------------------------------------------
+                       First-Order     Second-Order  Conserved
+---                    -----------     -----------   ---------------           
+cp.chisq.test          Yes             Yes           No? (Yes)
+
+heterogeneity.test     Not always      Not always    No
+
+sharma.song.test       No              Yes           No       
+--------------------------------------------------------------------
+-->
+
+## Examples to illustrate differences among the three tests
+
+Here, we show some examples to demostrate the usage, similarity and difference between the three tests. All these examples represent strong patterns so that the presence of a pattern type is evident. Both the comparaitive chi-squared test and the Sharma-Song test perform correctly on all five examples; while the heterogeneity test fails on two examples.
+
+
+```{r setup, message=F, warning=F, results = "hide"}
+require(FunChisq)
+require(DiffXTables)
+```
+
+**Example 1: Input tables are conserved.** At $\alpha=0.05$, all tests perform correctly by not rejecting the null hypothesis of conserved patterns.
+
+```{r, out.width='60%',fig.asp=0.6}
+tables <- list(
+ matrix(c(
+   14,  0,  4,
+    0,  8,  0,
+    4,  0, 12), byrow=TRUE, nrow=3),
+ matrix(c(
+    7,  0,  2,
+    0,  4,  0,
+    2,  0,  6), byrow=TRUE, nrow=3)
+)
+par(mfrow=c(1,2), cex=0.5, oma=c(0,0,2,0))
+plot_table(tables[[1]], highlight="none", xlab=NA, ylab=NA)
+plot_table(tables[[2]], highlight="none", xlab=NA, ylab=NA)
+mtext("Conserved patterns", outer = TRUE)
+
+cp.chisq.test(tables)
+
+sharma.song.test(tables)
+
+heterogeneity.test(tables)
+```
+
+**Example 2: Input tables are only first-order differential.** At $\alpha=0.05$, `cp.chisq.test()` performs correctly by declaring differential patterns; `sharma.song.test()` performs correctly by not delcaring second-order differential patterns; and `heterogenity.test()` performs incorrectly by not declaring the tables as differential.
+
+```{r, out.width='60%',fig.asp=0.6}
+tables <- list(
+  matrix(c(
+    16, 4, 20,
+     4, 1,  5,
+    20, 5, 25), nrow = 3, byrow = TRUE),
+  matrix(c(
+     1, 1,  8,
+     1, 1,  8,
+     8, 8, 64), nrow = 3, byrow = TRUE)
+  )
+par(mfrow=c(1,2), cex=0.5, oma=c(0,0,2,0))
+plot_table(tables[[1]], highlight="none", col="cornflowerblue", xlab=NA, ylab=NA)
+plot_table(tables[[2]], highlight="none", col="cornflowerblue", xlab=NA, ylab=NA)
+mtext("First-order differential patterns", outer = TRUE)
+
+cp.chisq.test(tables)
+
+sharma.song.test(tables)
+
+heterogeneity.test(tables)
+```
+
+**Example 3: Input tables are only first-order differential.** At $\alpha=0.05$, `cp.chisq.test()` correctly declares differential patterns; `sharma.song.test()` performs correctly by not delcaring second-order differential patterns; and `heterogenity.test()` correctly declares differential patterns.
+
+<!--
+From the example it can be observed that only `cp.chisq.test()` and `heterogenity.test()` can determine this as First order differential whereas only`sharma.song.test()`  identifies the tables as not differential.
+-->
+
+```{r, out.width='60%',fig.asp=0.6}
+tables <- list(
+  matrix(c(
+    8,  1, 1, 38, 4,
+    5,  1, 1, 17, 1,
+    2,  1, 1,  9, 1,
+    2,  1, 1,  4, 1), nrow=4, byrow = TRUE),
+  matrix(c(
+    1,  2, 1,  1, 2,
+    2,  9, 1,  1, 4,
+    2, 13, 1,  1, 1,
+    3, 45, 2,  1, 7), nrow=4, byrow = TRUE)
+)
+par(mfrow=c(1,2), cex=0.5, oma=c(0,0,2,0))
+plot_table(tables[[1]], highlight="none", col="cornflowerblue", xlab=NA, ylab=NA)
+plot_table(tables[[2]], highlight="none", col="cornflowerblue", xlab=NA, ylab=NA)
+mtext("First-order differential patterns", outer = TRUE)
+
+cp.chisq.test(tables)
+
+sharma.song.test(tables)
+
+heterogeneity.test(tables)
+```
+
+**Example 4: Input tables are only second-order differential**. 
+At $\alpha=0.05$, `cp.chisq.test()` correctly declares differential patterns; `sharma.song.test()` correctly delcares second-order differential patterns; and `heterogenity.test()` correctly declares differential patterns.
+
+<!--
+The output of each test is printed. From the example it can be observed that all the tests can determine these pairs as second order differential.
+-->
+
+```{r, out.width='60%',fig.asp=0.6}
+tables <- list(
+  matrix(c(
+    4, 0, 0,
+    0, 4, 0,
+    0, 0, 4
+  ), byrow=TRUE, nrow=3),
+  matrix(c(
+    0, 4, 4,
+    4, 0, 4,
+    4, 4, 0
+  ), byrow=TRUE, nrow=3)
+)
+par(mfrow=c(1,2), cex=0.5, oma=c(0,0,2,0))
+plot_table(tables[[1]], highlight="none", col="salmon", xlab=NA, ylab=NA)
+plot_table(tables[[2]], highlight="none", col="salmon", xlab=NA, ylab=NA)
+mtext("Second-order differential patterns", outer = TRUE)
+cp.chisq.test(tables)
+
+sharma.song.test(tables)
+
+heterogeneity.test(tables)
+```
+
+**Example 5: Input tables are both first- and second-order differential.** At $\alpha=0.05$, `cp.chisq.test()` correctly declares differential patterns; `sharma.song.test()` correctly delcares second-order differential patterns; and `heterogenity.test()` performs incorrectly by not rejecting the tables as having conserved patterns.
+
+<!-- From the example it can be observed that only `cp.chisq.test()` and `sharma.song.test()` can determine this as second order differential whereas `heterogenity.test()` identify the tables as not differential.-->
+```{r, out.width='60%',fig.asp=0.6}
+tables <- list(
+  matrix(c(
+    50,  0, 0,  0,
+     0,  0, 1,  0,
+     0, 50, 0,  0,
+     1,  0, 0,  0,
+     0,  0, 0, 50
+  ), byrow=T, nrow = 5),
+  matrix(c(
+     1,  0,  0, 0,
+     0,  0, 50, 0,
+     0,  1,  0, 0,
+    50,  0,  0, 0,
+     0,  0,  0, 1
+  ), byrow=T, nrow = 5)
+)
+par(mfrow=c(1,2), cex=0.5, oma=c(0,0,2,0))
+plot_table(tables[[1]], highlight="none", col="orange", xlab=NA, ylab=NA)
+plot_table(tables[[2]], highlight="none", col="orange", xlab=NA, ylab=NA)
+mtext("Differential patterns", outer = TRUE)
+cp.chisq.test(tables)
+
+sharma.song.test(tables)
+
+heterogeneity.test(tables)
+```
+
+## Conclusions
+
+The examples here demonstrate the use of the package. Most importantly, they also suggest that it may be necessary to consider options different from the default textbook solution to determining heterogeneity across contingency tables.
+
+
+
+
+
