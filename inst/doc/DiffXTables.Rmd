@@ -1,7 +1,7 @@
 ---
 title: "Using the 'DiffXTables' R package to detect heterogeneity"
 author: "Ruby Sharma and Joe Song"
-date: "Created October 22, 2019"
+date: "Created October 22, 2019; Updated November 10, 2019"
 output: rmarkdown::html_vignette
   #pdf_document:
     #latex_engine: xelatex
@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 <!--This package is useful in multidisciplinary research areas, any two or more experimental conditions can be tested to check if they are differential from one another.-->
 
-The quesiton that whether the relationship between two variables has changed across conditions is often fundamental to a scientific inquiry. For example, a biologist could ask whether the relationship between two genes in a cancer cell has been modified from a normal cell. The 'DiffXTables' R package answers such questions via evaluating the statistical evidence of distributional changes in the involved variables from data.
+The heterogeneity quesiton asks whether a relationship between two random variables has changed across conditions. It is often fundamental to a scientific inquiry. For example, a biologist could ask whether the relationship between two genes has been modified in a cancer cell from that in a normal cell. The 'DiffXTables' R package answers the heterogeneity question via evaluating statistical evidence for distributional changes in the involved variables from the observed data.
 
-Given multiple contingency tables of the same dimensions, 'DiffXTables' offers three methods `cp.chisq.test()`, `sharma.song.test()`, and `heterogenity.test()` to test whether the distributions underlying the tables are different. All three tests use the chi-squared distribution to calculate a p-value to indicate the statistical significance of any detected difference across the tables. However, these tests behave sharply different for various types of pattern heterogeneity present in the input tables. Here, we define pattern types, explain the three tests, and illustrate their similarity and difference by examples. The examples reveal some inadequacy of the current textbook solution to the contingency table heterogeneity question.
+Given multiple contingency tables of the same dimension, 'DiffXTables' offers three methods `cp.chisq.test()`, `sharma.song.test()`, and `heterogenity.test()` to test whether the distributions underlying the tables are different. All three tests use the chi-squared distribution to calculate a p-value to indicate the statistical significance of any detected difference across the tables. However, these tests behave sharply different for various types of pattern heterogeneity present in the input tables. Here, we define pattern types, explain the three tests, and illustrate their similarities and differences by examples. These examples reveal inadequacy of the current textbook solution to the contingency table heterogeneity question.
 
 <!--second order (joint distribution or interaction) differential, first order (marginally) differential or both.-->
 
@@ -31,20 +31,14 @@ Given multiple contingency tables of the same dimensions, 'DiffXTables' offers t
 
 A _pattern_ is a contingency table tabulating the counts or frequencies observed for a pair of discrete random variables. We study the distributional differences across tables collected from more than one conditions.
 
-* _First-order differential patterns_: Some or all pairs of input tables differ only in marginal distributions of either row or column variables. Other pairs share the same underlying joint distribution.
-
-<!-- $X_k$ and $Y_k$.-->
+* _First-order differential patterns_: Some or all pairs of input tables differ in either row or column marginal distributions. Other pairs share the same underlying joint distribution.
 
 * _Second-order differential patterns_: 
 Some or all pairs of input tables differ in joint distributions not attributed to any difference in marginal distributions.
 
-<!-- Differences in relationship $X_k \to Y_k$ (interaction) or joint distriution in $K$ conditions.-->
-
 * _Differential patterns_: Some or all pairs of tables differ in joint distributions.
 
 * _Conserved patterns_: All tables share the same joint distributions.
-
-<!-- in $X_k \to Y_k$ relationship.-->
 
 ## The three tests of distributional differences across tables
 

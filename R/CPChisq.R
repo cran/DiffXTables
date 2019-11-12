@@ -90,7 +90,7 @@ cp.chisq.test <- function(tables, method = c("chisq", "nchisq", "default", "norm
     names(p.val) <- "p.value"
 
     return(structure(list( statistic=finalStat, parameter=finalDf, p.value=p.val,
-                           method = "Comparative chi-squared test",
+                           method = "Comparative Chi-Squared Test for Pattern Difference",
                            data.name= DNAME),
                      class = "htest"))
 
@@ -106,7 +106,7 @@ cp.chisq.test <- function(tables, method = c("chisq", "nchisq", "default", "norm
     names(p.val) <- "p.value"
 
     return(structure(list(statistic = finalStat, parameter = finalDf, p.value = p.val,
-                          method = "Nomalized comparative chi-squared test",
+                          method = "Nomalized Comparative Chi-Squared Test for Pattern Difference",
                           data.name= DNAME),
                      class = "htest"))
   }

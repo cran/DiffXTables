@@ -2,6 +2,7 @@
 #
 # Updated:
 #  June 12, 2019. Fixed a test case due to wrong code before.
+#  October 29, 2019 Added a test case for 2X2 tables
 
 library(testthat)
 library(DiffXTables)
@@ -9,6 +10,32 @@ library(DiffXTables)
 context("Testing sharma.song.test()")
 
 test_that("Testing sharma.song.test", {
+  
+  # 2X2 matrix test
+  x <- list(
+    matrix(c(4,0,
+             0,4), nrow=2),
+    matrix(c(0,4,
+             4,0), nrow=2)
+  )
+  h <- sharma.song.test(x)
+  expect_equivalent(signif(h$p.value, 8), 
+                    pchisq(16, 1, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 16)
+  expect_equivalent(h$parameter, 1)
+  
+  # 2X2 all zeros 
+  x <- list(
+    matrix(c(0,0,
+             0,0), nrow=2),
+    matrix(c(0,0,
+             0,0), nrow=2)
+  )
+  h <- sharma.song.test(x)
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 0)
+  
 
   # all zero matrices
 
@@ -126,6 +153,21 @@ test_that("Testing sharma.song.test", {
 
 # Testing comparative chi square test
 test_that("Testing comparative chi-squared test", {
+  
+  
+  # 2X2 matrix test
+  x <- list(
+    matrix(c(4,0,
+             0,4), nrow=2),
+    matrix(c(0,4,
+             4,0), nrow=2)
+  )
+  h <- cp.chisq.test(x)
+  expect_equivalent(signif(h$p.value, 8), 
+                    pchisq(16, 1, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 16)
+  expect_equivalent(h$parameter, 1)
+  
 
   # all zero matrices
   x0 <- matrix(c(0,0,0,
@@ -192,6 +234,19 @@ test_that("Testing comparative chi-squared test", {
 
 # Testing heterogeneity test
 test_that("Testing heterogeneity test", {
+  
+  # 2X2 matrix test
+  x <- list(
+    matrix(c(4,0,
+             0,4), nrow=2),
+    matrix(c(0,4,
+             4,0), nrow=2)
+  )
+  h <- heterogeneity.test(x)
+  expect_equivalent(signif(h$p.value, 8), 
+                    pchisq(9, 1, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 9)
+  expect_equivalent(h$parameter, 1)
 
   # all zero matrices
   x <- list()

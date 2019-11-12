@@ -45,7 +45,7 @@ heterogeneity.test <- function(tables)
     parameter = df, 
     p.value = p.val,
     data.name = DNAME,
-    method = "Heterogeneity chi-squared test"),
+    method = "Heterogeneity Test for Pattern Difference"),
     class = "htest"))
 
 }

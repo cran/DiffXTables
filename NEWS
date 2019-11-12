@@ -1,5 +1,21 @@
 NEWS
 
+Version 0.0.2
+  2019-11-12
+  1. Updated the package description.
+  2. Updated the REAMDE.md file.
+
+  2019-11-10
+  1. Updated the vignette.
+  2. Updated the REAMDE.md file.
+
+  2019-10-29
+  1. Created version 0.0.2.
+  2. Fixed a bug for 2x2 tables in the Sharma-Song test. A test case is added
+  to check for the bug.
+  3. Changed package title to "Pattern Heterogeneity via Distributional
+  Differences Across Contingency Tables"
+
 Version 0.0.1
   2019-10-29
   1. Created version 0.0.1.

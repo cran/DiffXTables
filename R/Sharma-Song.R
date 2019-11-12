@@ -3,8 +3,15 @@
 # Output: Statistics and p-value, significance of differentiality
 # Created by: Ruby Sharma and Dr. Joe Song
 # Date Created: 28 December 2018
-# Date Modified: 12 June 2019 by Dr. Joe Song
-
+# Modified: 
+#   12 June 2019 by Dr. Joe Song
+# 
+#   October 29, 2019:
+#     - Added ifelse to check if U is a matrix, if, yes, multiply by 
+#       nrow(U) else multiply by 1
+#     - Added a test case for 2x2 tables
+#     - Renamed matrix U to Q to be consistent with the manuscript.
+#     - Simplified the calculation of Df.
 
 #######################################
 #### Imports for the whole package ####
@@ -16,12 +23,12 @@ sharma.song.test <- function(tables)
 { 
 
   if (mode(tables) != "list" || length(tables) < 2) {
-    stop("only accept list of 2 or more matrices as input!")
+    stop("Input must be a list of 2 or more matrices!")
   }
 
   for(k in 1:(length(tables)-1)){
     if(!identical(dim(tables[[k]]), dim(tables[[k+1]])))
-    stop("All matries should have same number of rows and columns")
+    stop("All matries must have identical dimensions!")
   }
 
   # Get independent standard normal variables (E matrix) using Helmert tranfrom 
@@ -40,15 +47,15 @@ sharma.song.test <- function(tables)
     b <- sqrt(n) / sum(sqrt(n))
 
     # Difference of individual E vectors from E pooled:
-    U <- sapply(seq(K), function(k){
+    Q <- sapply(seq(K), function(k){
       return( EList[[k]] - b[k] * EP )
     })
 
     # Calculate covariance matrix:
-    C = cpc.cov.matrix(b)
+    C <- cpc.cov.matrix(b)
 
     # Find the rank of the cov matrix
-    R = rankMatrix(C) # R = as.vector(rankMatrix(C))
+    R <- rankMatrix(C) 
 
     # Perform eigen-decomposition of covariance matrix:
     eig <- eigen(C)
@@ -60,12 +67,12 @@ sharma.song.test <- function(tables)
 
     Z <- diag( 1 / sqrt( nonzero.eigenvalues ), nrow = R, ncol = R)
 
-    # Calculating mahalnobis distance from eigenvalue
+    # Calculating Mahalanobis distance squared from eigenvalue
     #   decomposition since rank is not full
-    Stat <- sum( ( U %*% S %*% Z ) ^ 2 )
+    Stat <- sum( ( Q %*% S %*% Z ) ^ 2 )
 
-    Df <- R * nrow(U)
-
+    Df <- R * length(EP)  # Df <- R * ifelse(is.matrix(Q), nrow(Q), 1)
+      
     P.val <- pchisq(Stat, Df, lower.tail = FALSE)
 
   } else {
@@ -85,13 +92,13 @@ sharma.song.test <- function(tables)
     parameter = Df,
     p.value = P.val,
     data.name = DNAME,
-    method = "Sharma-Song second-order chi-squared test"),
+    method = "Sharma-Song Test for Second-Order Pattern Difference"),
     class = "htest"))
 }
 
+
 get.e.mat <- function(tables)
 { 
-
   K <- length(tables)
   EList <- vector("list", length = K)
   n <- vector("numeric", length = K)
@@ -102,7 +109,7 @@ get.e.mat <- function(tables)
 
     expec <- expected(tables[[k]])
 
-    A <- (tables[[k]] -  expec) / sqrt(ifelse(expec == 0, 1, expec))
+    A <- (tables[[k]] - expec) / sqrt(ifelse(expec == 0, 1, expec))
 
     rowSum <- rowSums(expec)
     colSum <- colSums(expec)
@@ -129,7 +136,7 @@ get.e.mat <- function(tables)
 }
 
 
-expected =  function(table)
+expected <- function(table)
 {
   rowSum = rowSums(table)
   colSum = colSums(table)
@@ -166,7 +173,6 @@ helmert.matrix <- function(p)
       sumpi.minus.1 <- sumpi
     }
   }
-
   return(L)
 }
 
