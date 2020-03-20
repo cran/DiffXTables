@@ -1,14 +1,14 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, message=F, warning=F, results = "hide"-----------------------
+## ----setup, message=F, warning=F, results = "hide"----------------------------
 require(FunChisq)
 require(DiffXTables)
 
-## ---- out.width='60%',fig.asp=0.6----------------------------------------
+## ---- out.width='60%',fig.asp=0.6---------------------------------------------
 tables <- list(
  matrix(c(
    14,  0,  4,
@@ -30,7 +30,7 @@ sharma.song.test(tables)
 
 heterogeneity.test(tables)
 
-## ---- out.width='60%',fig.asp=0.6----------------------------------------
+## ---- out.width='60%',fig.asp=0.6---------------------------------------------
 tables <- list(
   matrix(c(
     16, 4, 20,
@@ -52,7 +52,7 @@ sharma.song.test(tables)
 
 heterogeneity.test(tables)
 
-## ---- out.width='60%',fig.asp=0.6----------------------------------------
+## ---- out.width='60%',fig.asp=0.6---------------------------------------------
 tables <- list(
   matrix(c(
     8,  1, 1, 38, 4,
@@ -76,7 +76,7 @@ sharma.song.test(tables)
 
 heterogeneity.test(tables)
 
-## ---- out.width='60%',fig.asp=0.6----------------------------------------
+## ---- out.width='60%',fig.asp=0.6---------------------------------------------
 tables <- list(
   matrix(c(
     4, 0, 0,
@@ -99,7 +99,7 @@ sharma.song.test(tables)
 
 heterogeneity.test(tables)
 
-## ---- out.width='60%',fig.asp=0.6----------------------------------------
+## ---- out.width='60%',fig.asp=0.6---------------------------------------------
 tables <- list(
   matrix(c(
     50,  0, 0,  0,

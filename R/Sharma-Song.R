@@ -12,16 +12,19 @@
 #     - Added a test case for 2x2 tables
 #     - Renamed matrix U to Q to be consistent with the manuscript.
 #     - Simplified the calculation of Df.
+# 
+#   March 18, 2020: The rank of the covariance matrix is always
+#     K-1. No need to compute the rank numerically.
 
 #######################################
 #### Imports for the whole package ####
-#' @importFrom Matrix rankMatrix
+# No longer need this import 
+#XXXXXXXXXX' @importFrom Matrix rankMatrix
 #######################################
 
 #' @export
 sharma.song.test <- function(tables)
-{ 
-
+{
   if (mode(tables) != "list" || length(tables) < 2) {
     stop("Input must be a list of 2 or more matrices!")
   }
@@ -55,7 +58,7 @@ sharma.song.test <- function(tables)
     C <- cpc.cov.matrix(b)
 
     # Find the rank of the cov matrix
-    R <- rankMatrix(C) 
+    R <- K - 1 # rankMatrix(C) 
 
     # Perform eigen-decomposition of covariance matrix:
     eig <- eigen(C)
@@ -92,7 +95,7 @@ sharma.song.test <- function(tables)
     parameter = Df,
     p.value = P.val,
     data.name = DNAME,
-    method = "Sharma-Song Test for Second-Order Pattern Difference"),
+    method = "Sharma-Song Test for Second-Order Differential Contingency Tables"),
     class = "htest"))
 }
 

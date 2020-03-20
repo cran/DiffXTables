@@ -8,8 +8,12 @@ bibentry(
   volume = "42",
   number = "7",
   pages = "e57",
-  author = c(person("Mingzhou", "Song"), person("Yang", "Zhang"), person("Alexia", "Katzaroff"), person("Bruce", "Edgar"), person("Laura", "Buttitta")),
-  url = "https://doi.org/10.1093/nar/gku086"
+  author = c(person("Mingzhou", "Song"), 
+             person("Yang", "Zhang"), 
+             person(c("Alexia", "J."), "Katzaroff"), 
+             person(c("Bruce", "A."), "Edgar"), 
+             person("Laura", "Buttitta")),
+  doi = "10.1093/nar/gku086"
 )
 
 bibentry(
@@ -21,18 +25,20 @@ bibentry(
   volume = "43",
   number = "9",
   pages = "4393--4407",
-  author = c(person("Yang", "Zhang"), person("Lewis", "Liu"), person("Mingzhou", "Song")),
-  url = "https://doi.org/10.1093/nar/gkv358"
+  author = c(person("Yang", "Zhang"), 
+             person(c("Z.", "Lewis"), "Liu"), 
+             person("Mingzhou", "Song")),
+  doi = "10.1093/nar/gkv358"
 )
 
 bibentry(
   bibtype="Manual",
-  key = "sharma2019diffxtables",
+  key = "sharma2020diffxtables",
   header = "To cite the Sharma-Song test in publications use:",
   title = "DiffXTables: Distributional Differences Across Contingency Tables",
   author = c(person("Ruby", "Sharma"),
              person("Mingzhou", "Song")),
   year = "2019",
-  note = "R package version 0.0.2",
+  note = "R package version 0.1.0",
   url = "https://CRAN.R-project.org/package=DiffXTables"
 )

@@ -11,11 +11,11 @@ Across given contingency tables, the test admits only second-order difference in
 }
 
 \arguments{
-  \item{tables}{  a list of at least two nonnegative matrices or data frames representing contingency tables of the same dimensions.}
+  \item{tables}{a list of at least two non-negative matrices or data frames representing contingency tables of the same dimensions.}
 }
 
 \details{
-      The sharma.song test determines whether the patterns underlying multiple input contingency tables are second-order differential. Its null test statistic is proved to asymptotically follow the chi-squared distribution.
+      The Sharma-Song test determines whether the patterns underlying multiple input contingency tables are second-order differential. Its null test statistic is proved to asymptotically follow the chi-squared distribution.
 }
 
 \value{
@@ -70,3 +70,4 @@ Ruby Sharma and Joe Song
 
 \keyword{htest}
 \keyword{nonparametric}
+\keyword{distribution}

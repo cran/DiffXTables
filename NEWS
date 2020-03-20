@@ -1,5 +1,32 @@
 NEWS
 
+Version 0.1.0 
+  2020-03-19
+  1. Changed the return value of the simulator function 
+     SimulateDiffXTab().
+  2. Renamed the simulator function to simulate_diff_tables() from
+     SimulateDiffXTab().
+  3. Minor editing in various files to improve code readability.
+  4. More tests are added for the simulator function.
+  5. Corrected typos in the vignette.
+
+  2020-03-18
+  1. Created version 0.1.0
+  2. Removed unnecessary calculation of the rank of covariance of
+     matrix C, which is theoretically known. Thus the import of Matrix
+     package is removed.
+  3. Revised function manuals.
+  4. Changed the simulator function arguments.
+  
+Version 0.0.4 (not publicly released)
+  2020-01-23
+  1. Created version 0.0.4
+  2. A simulator function SimulateDiffXTab() is added.
+  
+Version 0.0.3 (not publicly released)
+  2019-11-12
+  1. Created version 0.0.3.
+
 Version 0.0.2
   2019-11-12
   1. Updated the package description.
@@ -11,10 +38,10 @@ Version 0.0.2
 
   2019-10-29
   1. Created version 0.0.2.
-  2. Fixed a bug for 2x2 tables in the Sharma-Song test. A test case is added
-  to check for the bug.
-  3. Changed package title to "Pattern Heterogeneity via Distributional
-  Differences Across Contingency Tables"
+  2. Fixed a bug for 2x2 tables in the Sharma-Song test. A test case
+     is added to check for the bug.
+  3. Changed package title to "Pattern Heterogeneity via
+     Distributional Differences Across Contingency Tables"
 
 Version 0.0.1
   2019-10-29

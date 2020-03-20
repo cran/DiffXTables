@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Ruby Sharma and Joe Song" />
 
@@ -95,7 +95,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -116,9 +116,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +284,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -302,12 +300,12 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Using the ‘DiffXTables’ R package to detect heterogeneity</h1>
 <h4 class="author">Ruby Sharma and Joe Song</h4>
-<h4 class="date">Created October 22, 2019; Updated November 10, 2019</h4>
+<h4 class="date">Created October 22, 2019; Updated November 10, 2019; March 19, 2020</h4>
 
 
 
 <!--This package is useful in multidisciplinary research areas, any two or more experimental conditions can be tested to check if they are differential from one another.-->
-<p>The heterogeneity quesiton asks whether a relationship between two random variables has changed across conditions. It is often fundamental to a scientific inquiry. For example, a biologist could ask whether the relationship between two genes has been modified in a cancer cell from that in a normal cell. The ‘DiffXTables’ R package answers the heterogeneity question via evaluating statistical evidence for distributional changes in the involved variables from the observed data.</p>
+<p>The heterogeneity question asks whether a relationship between two random variables has changed across conditions. It is often fundamental to a scientific inquiry. For example, a biologist could ask whether the relationship between two genes has been modified in a cancer cell from that in a normal cell. The ‘DiffXTables’ R package answers the heterogeneity question via evaluating statistical evidence for distributional changes in the involved variables from the observed data.</p>
 <p>Given multiple contingency tables of the same dimension, ‘DiffXTables’ offers three methods <code>cp.chisq.test()</code>, <code>sharma.song.test()</code>, and <code>heterogenity.test()</code> to test whether the distributions underlying the tables are different. All three tests use the chi-squared distribution to calculate a p-value to indicate the statistical significance of any detected difference across the tables. However, these tests behave sharply different for various types of pattern heterogeneity present in the input tables. Here, we define pattern types, explain the three tests, and illustrate their similarities and differences by examples. These examples reveal inadequacy of the current textbook solution to the contingency table heterogeneity question.</p>
 <!--second order (joint distribution or interaction) differential, first order (marginally) differential or both.-->
 <div id="types-of-pattern" class="section level2">
@@ -325,7 +323,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>The input to all three tests is two or more contingency tables. The output is chi-squared test statistics, their degrees of freedom, and <em>p</em>-values. They also share the same null hypothesis H0 that all tables are conserved in distributions. However, these tests answer distinct alternative hypotheses.</p>
 <div id="the-comparative-chi-squared-test" class="section level3">
 <h3>1. The comparative chi-squared test</h3>
-<!--Given two or more contingency tables as parameter x, `cp.chisq.test()` will provide two quantities to evaluate if the tables has any kind of differentialilty (first, second or both). It includes the comparative chi-square test statistic and statistical significance ($p$-value)-->
+<!--Given two or more contingency tables as parameter x, `cp.chisq.test()` will provide two quantities to evaluate if the tables has any kind of differentiality (first, second or both). It includes the comparative chi-square test statistic and statistical significance ($p$-value)-->
 <p>Alternative hypothesis H1: Patterns represented by the tables are <strong>differential</strong>.</p>
 <p>The statistical foundation of this test is first established in <a href="https://doi.org/10.1093/nar/gku086">&lt;doi:10.1093/nar/gku086&gt;</a> and the test is then extended to identify differential patterns in networks <a href="https://doi.org/10.1093/nar/gkv358">&lt;doi:10.1093/nar/gkv358&gt;</a>.</p>
 <p>It is implemented as the R function <code>cp.chisq.test()</code> in this package.</p>
@@ -342,7 +340,7 @@ Given two or more contingency tables as parameter x, `sharma.song.test()` will p
 <div id="the-heterogeneity-test" class="section level3">
 <h3>3. The heterogeneity test</h3>
 <!--
-Given two or more contingency tables as parameter x, `heterogenity.test()`  will provide two quantities to evaluate if the tables are first order differential or second order differential but not always. It includes the heterogeinty test statistic and statistical significance ($p$-value)
+Given two or more contingency tables as parameter x, `heterogeneity.test()`  will provide two quantities to evaluate if the tables are first order differential or second order differential but not always. It includes the heterogeneity test statistic and statistical significance ($p$-value)
 -->
 <p>Alternative hypothesis H1: Patterns represented by the tables are <strong>differential</strong>.</p>
 <p>This test is described in (Zar, 2010). Although it widely appears in textbooks, we demonstrate that it is not always powerful in some examples below.</p>
@@ -365,7 +363,7 @@ sharma.song.test       No              Yes           No
 </div>
 <div id="examples-to-illustrate-differences-among-the-three-tests" class="section level2">
 <h2>Examples to illustrate differences among the three tests</h2>
-<p>Here, we show some examples to demostrate the usage, similarity and difference between the three tests. All these examples represent strong patterns so that the presence of a pattern type is evident. Both the comparaitive chi-squared test and the Sharma-Song test perform correctly on all five examples; while the heterogeneity test fails on two examples.</p>
+<p>Here, we show some examples to demonstrate the usage, similarity and difference between the three tests. All these examples represent strong patterns so that the presence of a pattern type is evident. Both the comparative chi-squared test and the Sharma-Song test perform correctly on all five examples; while the heterogeneity test fails on two examples.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">require</span>(FunChisq)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">require</span>(DiffXTables)</a></code></pre></div>
 <p><strong>Example 1: Input tables are conserved.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, all tests perform correctly by not rejecting the null hypothesis of conserved patterns.</p>
@@ -394,7 +392,7 @@ sharma.song.test       No              Yes           No
 <a class="sourceLine" id="cb3-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">sharma.song.test</span>(tables)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Pattern Difference</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Differential Contingency Tables</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; X-squared = 2.9934e-32, df = 4, p-value = 1</span></a>
@@ -405,7 +403,7 @@ sharma.song.test       No              Yes           No
 <a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt; X-squared = 0, df = 4, p-value = 1</span></a></code></pre></div>
-<p><strong>Example 2: Input tables are only first-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> performs correctly by declaring differential patterns; <code>sharma.song.test()</code> performs correctly by not delcaring second-order differential patterns; and <code>heterogenity.test()</code> performs incorrectly by not declaring the tables as differential.</p>
+<p><strong>Example 2: Input tables are only first-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> performs correctly by declaring differential patterns; <code>sharma.song.test()</code> performs correctly by not declaring second-order differential patterns; and <code>heterogenity.test()</code> performs incorrectly by not declaring the tables as differential.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="kw">matrix</span>(<span class="kw">c</span>(</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">    <span class="dv">16</span>, <span class="dv">4</span>, <span class="dv">20</span>,</a>
@@ -431,7 +429,7 @@ sharma.song.test       No              Yes           No
 <a class="sourceLine" id="cb5-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb5-9" data-line-number="9"><span class="kw">sharma.song.test</span>(tables)</a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Pattern Difference</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Differential Contingency Tables</span></a>
 <a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; X-squared = 0, df = 4, p-value = 1</span></a>
@@ -442,9 +440,9 @@ sharma.song.test       No              Yes           No
 <a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; X-squared = 3.1058, df = 4, p-value = 0.5403</span></a></code></pre></div>
-<p><strong>Example 3: Input tables are only first-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> performs correctly by not delcaring second-order differential patterns; and <code>heterogenity.test()</code> correctly declares differential patterns.</p>
+<p><strong>Example 3: Input tables are only first-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> performs correctly by not declaring second-order differential patterns; and <code>heterogenity.test()</code> correctly declares differential patterns.</p>
 <!--
-From the example it can be observed that only `cp.chisq.test()` and `heterogenity.test()` can determine this as First order differential whereas only`sharma.song.test()`  identifies the tables as not differential.
+From the example it can be observed that only `cp.chisq.test()` and `heterogeneity.test()` can determine this as First order differential whereas only`sharma.song.test()`  identifies the tables as not differential.
 -->
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="kw">matrix</span>(<span class="kw">c</span>(</a>
@@ -473,7 +471,7 @@ From the example it can be observed that only `cp.chisq.test()` and `heterogenit
 <a class="sourceLine" id="cb7-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb7-9" data-line-number="9"><span class="kw">sharma.song.test</span>(tables)</a>
 <a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Pattern Difference</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt;  Sharma-Song Test for Second-Order Differential Contingency Tables</span></a>
 <a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb7-14" data-line-number="14"><span class="co">#&gt; X-squared = 5.6207, df = 12, p-value = 0.934</span></a>
@@ -484,7 +482,7 @@ From the example it can be observed that only `cp.chisq.test()` and `heterogenit
 <a class="sourceLine" id="cb7-19" data-line-number="19"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb7-20" data-line-number="20"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb7-21" data-line-number="21"><span class="co">#&gt; X-squared = 53.413, df = 12, p-value = 3.478e-07</span></a></code></pre></div>
-<p><strong>Example 4: Input tables are only second-order differential</strong>. At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> correctly delcares second-order differential patterns; and <code>heterogenity.test()</code> correctly declares differential patterns.</p>
+<p><strong>Example 4: Input tables are only second-order differential</strong>. At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> correctly declares second-order differential patterns; and <code>heterogenity.test()</code> correctly declares differential patterns.</p>
 <!--
 The output of each test is printed. From the example it can be observed that all the tests can determine these pairs as second order differential.
 -->
@@ -514,7 +512,7 @@ The output of each test is printed. From the example it can be observed that all
 <a class="sourceLine" id="cb9-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb9-8" data-line-number="8"><span class="kw">sharma.song.test</span>(tables)</a>
 <a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt;  Sharma-Song Test for Second-Order Pattern Difference</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">#&gt;  Sharma-Song Test for Second-Order Differential Contingency Tables</span></a>
 <a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">#&gt; X-squared = 36, df = 4, p-value = 2.894e-07</span></a>
@@ -525,8 +523,8 @@ The output of each test is printed. From the example it can be observed that all
 <a class="sourceLine" id="cb9-18" data-line-number="18"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb9-19" data-line-number="19"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb9-20" data-line-number="20"><span class="co">#&gt; X-squared = 36, df = 4, p-value = 2.894e-07</span></a></code></pre></div>
-<p><strong>Example 5: Input tables are both first- and second-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> correctly delcares second-order differential patterns; and <code>heterogenity.test()</code> performs incorrectly by not rejecting the tables as having conserved patterns.</p>
-<!-- From the example it can be observed that only `cp.chisq.test()` and `sharma.song.test()` can determine this as second order differential whereas `heterogenity.test()` identify the tables as not differential.-->
+<p><strong>Example 5: Input tables are both first- and second-order differential.</strong> At <span class="math inline">\(\alpha=0.05\)</span>, <code>cp.chisq.test()</code> correctly declares differential patterns; <code>sharma.song.test()</code> correctly declares second-order differential patterns; and <code>heterogenity.test()</code> performs incorrectly by not rejecting the tables as having conserved patterns.</p>
+<!-- From the example it can be observed that only `cp.chisq.test()` and `sharma.song.test()` can determine this as second order differential whereas `heterogeneity.test()` identify the tables as not differential.-->
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">  <span class="kw">matrix</span>(<span class="kw">c</span>(</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">    <span class="dv">50</span>,  <span class="dv">0</span>, <span class="dv">0</span>,  <span class="dv">0</span>,</a>
@@ -557,7 +555,7 @@ The output of each test is printed. From the example it can be observed that all
 <a class="sourceLine" id="cb11-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb11-8" data-line-number="8"><span class="kw">sharma.song.test</span>(tables)</a>
 <a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt;  Sharma-Song Test for Second-Order Pattern Difference</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#&gt;  Sharma-Song Test for Second-Order Differential Contingency Tables</span></a>
 <a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#&gt; data:  tables</span></a>
 <a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#&gt; X-squared = 96.239, df = 12, p-value = 3.026e-15</span></a>
@@ -574,6 +572,9 @@ The output of each test is printed. From the example it can be observed that all
 <p>The examples here demonstrate the use of the package. Most importantly, they also suggest that it may be necessary to consider options different from the default textbook solution to determining heterogeneity across contingency tables.</p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

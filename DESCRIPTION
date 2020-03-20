@@ -1,8 +1,8 @@
 Package: DiffXTables
 Title: Pattern Heterogeneity via Distributional Differences Across
         Contingency Tables
-Version: 0.0.2
-Date: 2019-11-12
+Version: 0.1.0
+Date: 2020-03-19
 Authors@R: 
     c(person(given = "Ruby",
              family = "Sharma",
@@ -29,14 +29,13 @@ Description: Statistical hypothesis testing of pattern heterogeneity via
     Second-order differences may reveal more fundamental changes than
     first-order differences across heterogeneous patterns. 
 Depends: R (>= 3.0)
-Imports: Matrix
 Suggests: Ckmeans.1d.dp, FunChisq, knitr, rmarkdown, testthat
 License: LGPL (>= 3)
 Encoding: UTF-8
 NeedsCompilation: no
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
-Packaged: 2019-11-12 18:13:23 UTC; joesong
+RoxygenNote: 7.1.0
+Packaged: 2020-03-20 04:30:28 UTC; joesong
 Repository: CRAN
-Date/Publication: 2019-11-12 18:40:05 UTC
+Date/Publication: 2020-03-20 07:50:03 UTC

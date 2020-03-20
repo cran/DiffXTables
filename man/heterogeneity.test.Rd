@@ -11,7 +11,7 @@ Across given contingency tables, the test admits any type of differences in eith
 }
 
 \arguments{
-  \item{tables}{  a list of at least two nonnegative matrices or data frames representing contingency tables of the same dimensions.}
+  \item{tables}{  a list of at least two non-negative matrices or data frames representing contingency tables of the same dimensions.}
 }
 
 \details{
