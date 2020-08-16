@@ -51,14 +51,3 @@ heterogeneity.test <- function(tables)
 }
 
 
-#' @importFrom stats chisq.test
-chisq.test.stat <- function(table)
-{
-  non.zero.rows <- apply(table, 1, function(row) { 0 != sum(abs(row)) } )
-  non.zero.cols <- apply(table, 2, function(col) { 0 != sum(abs(col)) } )
-
-# perform Pearson chi-square test
-  chisq <- suppressWarnings(chisq.test(table[non.zero.rows, non.zero.cols])$statistic)
-
-  return(chisq)
-}

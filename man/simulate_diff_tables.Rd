@@ -1,7 +1,7 @@
 \name{simulate_diff_tables}
 \alias{simulate_diff_tables}
 \title{
-  Simulating Contingency Tables that are Differential in Joint Distribution
+  Simulating Contingency Tables that Differ in Distribution
 }
 \description{
   Generate contingency tables that are first-order, second-order or full-order differential in the joint distribution of row and column variables.
@@ -69,11 +69,11 @@ The simulation starts with randomly generated probability tables where row and c
 \seealso{
   Differential tables are simulated to evaluate the following tests for comparing contingency tables: 
   
-  {The Sharma-Song test}{\code{\link[DiffXTables]{sharma.song.test}}}
+  {The Sharma-Song test} {\code{\link[DiffXTables]{sharma.song.test}}}
   
-  {The comparative chi-squared test}{\code{\link[DiffXTables]{cp.chisq.test}}}
+  {The comparative chi-squared test} {\code{\link[DiffXTables]{cp.chisq.test}}}
   
-  {The heterogeneity test}{\code{\link[DiffXTables]{heterogeneity.test}}}
+  {The heterogeneity test} {\code{\link[DiffXTables]{heterogeneity.test}}}
   
   The \code{\link[FunChisq]{simulate_tables}} function in package \pkg{FunChisq} can generate a variety of tables.
 }

@@ -1,7 +1,7 @@
 \name{cp.chisq.test}
 \alias{cp.chisq.test}
 \title{
-Comparative Chi-Squared Test for Distributional Differences Across Contingency Tables
+Comparative Chi-Squared Test for Difference Across Contingency Tables
 }
 \description{
 Across given contingency tables, the test admits any type of differences in either the joint or marginal distributions underlying the tables.
@@ -30,9 +30,14 @@ cp.chisq.test(
 }
 
 \details{
-The comparative chi-squared test determines whether the patterns underlying multiple contingency tables are heterogeneous. Its null test statistic is proved to asymptotically follow the chi-squared distribution (Song et al., 2014; Zhang et al., 2015). This test is different from the heterogeneity test (Zar, 2010).
+The comparative chi-squared test determines whether the patterns underlying multiple contingency tables are heterogeneous. Its null test statistic is proved to asymptotically follow the chi-squared distribution \insertCite{song2014hunting,zhang2015chinet}{DiffXTables}. This test is different from the heterogeneity test \insertCite{zar2009biostatistical}{DiffXTables}.
 
-Two methods are provided to compute the chi-squared statistic and its p-value. When \code{method = "chisq"} (or \code{"default"}), the p-value is computed using the chi-squared distribution; when \code{method =} \code{"nchisq"} (or \code{"normalized"}) a normalized statistic is obtained by shifting and scaling the original chi-squared test statistic and a p-value is computed using the standard normal distribution (Box et al., 2005). The normalized test is more conservative on the degrees of freedom.
+Two methods are provided to compute the chi-squared statistic and its p-value. When \code{method = "chisq"} (or \code{"default"}), the p-value is computed using the chi-squared distribution; when \code{method =} \code{"nchisq"} (or \code{"normalized"}) a normalized statistic is obtained by shifting and scaling the original chi-squared test statistic and a p-value is computed using the standard normal distribution
+\insertCite{george2005statistics}{DiffXTables}. The normalized test is more conservative on the degrees of freedom.
+
+Either test statistic is minimized to zero if and only if the input tables are linearly scaled versions of each other. 
+
+The test is recommended to determine whether multiple contingency tables have the same distributions, regardless of independence of row and column variables in each table.
 }
 
 \value{
@@ -44,13 +49,7 @@ A list with class "\code{htest}" containing the following components:
 }
 
 \references{
-Box, G. E., Hunter, J. S. and Hunter, W. G. (2005) \emph{Statistics for Experimenters: Design, Innovation and Discovery}, 2nd Ed., New York: Wiley-Interscience.
-
-Song M., Zhang Y., Katzaroff A. J., Edgar B. A. and Buttitta L. (2014) Hunting complex differential gene interaction patterns across molecular contexts. \emph{Nucleic Acids Research} \bold{42}(7), e57. Retrieved from \url{https://doi.org/10.1093/nar/gku086}
-
-Zar, J. H. (2010) \emph{Biostatistical Analysis}, 5th Ed., New Jersey: Prentice Hall.
-
-Zhang, Y., Liu, Z. L. and Song, M. (2015) ChiNet uncovers rewired transcription subnetworks in tolerant yeast for advanced biofuels conversion. \emph{Nucleic Acids Research} \bold{43}(9), 4393--4407. Retrieved from \url{https://doi.org/10.1093/nar/gkv358}
+\insertAllCited{} 
 }
 
 \author{

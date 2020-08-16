@@ -35,10 +35,24 @@ bibentry(
   bibtype="Manual",
   key = "sharma2020diffxtables",
   header = "To cite the Sharma-Song test in publications use:",
-  title = "DiffXTables: Distributional Differences Across Contingency Tables",
+  title = "DiffXTables: Pattern Analysis Across Contingency Tables",
   author = c(person("Ruby", "Sharma"),
              person("Mingzhou", "Song")),
-  year = "2019",
-  note = "R package version 0.1.0",
+  year = "2020",
+  note = "R package",
   url = "https://CRAN.R-project.org/package=DiffXTables"
+)
+
+bibentry(
+  bibtype="inproceedings",
+  key = "sharma2020COPTYP",
+  header = "To cite the marginal-change test, the strength test, and type analysis on multiple contingency tables in publications use:",
+  author = c(person("Ruby", "Sharma"),
+             person("Xuye", "Luo"),
+             person("Sajal", "Kumar"),
+             person("Mingzhou", "Song")),
+	booktitle = "Proceedings of the 11th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics {(BCB '20)}",
+	title = "Three co-expression pattern types across microbial transcriptional networks of plankton in two oceanic waters",
+	year = "2020",
+	note = "In press"
 )

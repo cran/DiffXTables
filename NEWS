@@ -1,6 +1,50 @@
 NEWS
 
+Version 0.1.1
+  
+  2020-08-11
+  1. Removed DOI from reference (Sharma et al 2020), which is still
+     in press.
+  
+  2020-08-07
+  1. Updated DESCRIPTION
+  2. Updated REFERENCES.bib and CITATION
+  
+  2020-08-02
+  1. Updated user manual for type.analysis() function
+  2. Turned off Yates correction in calculating 2x2 chi-squared
+     statistics in internal R function chisq.test.stat
+  3. Adjusted test cases for 2x2 tables used for the heterogeneity 
+     test without Yates correction. See line 270 and 272 in 
+     test_DiffXTables.R
+  4. Removed duplicate function chisq.test.stat() and created a new
+     file chisq-test-stat.R to include only one copy of the function.
+  5. Changed the package title to "Pattern Analysis Across Contingency Tables"
+  
+  2020-08-01
+  1. Renamed association.order.ana() to type.analysis()
+  2. Included a S3 method print.DiffXTableTypeAnalysis()
+  3. Updated the printout of type.analysis()
+  
+  2020-07-22
+  1. Added a marginal.change.test for first-order analysis.
+  2. Added a strength.test for determining the strength of
+     association.
+  3. Added a association.order.ana method for analysis of strength
+     and change in association.
+  4. Added test cases for all the methods. 
+
+  2020-05-14
+  1. Corrected the normalized frequency table A inside 
+     function get.e.mat() in Sharma-Song.R when an entry 
+     has both zero row and zero column sums.
+  2. Add new test cases for the above change.
+  
+  2020-05-02
+  1. Created version 0.1.1 from 0.1.0
+  
 Version 0.1.0 
+
   2020-03-19
   1. Changed the return value of the simulator function 
      SimulateDiffXTab().
@@ -19,15 +63,18 @@ Version 0.1.0
   4. Changed the simulator function arguments.
   
 Version 0.0.4 (not publicly released)
+
   2020-01-23
   1. Created version 0.0.4
   2. A simulator function SimulateDiffXTab() is added.
   
 Version 0.0.3 (not publicly released)
+
   2019-11-12
   1. Created version 0.0.3.
 
 Version 0.0.2
+
   2019-11-12
   1. Updated the package description.
   2. Updated the REAMDE.md file.
@@ -44,13 +91,16 @@ Version 0.0.2
      Distributional Differences Across Contingency Tables"
 
 Version 0.0.1
+
   2019-10-29
   1. Created version 0.0.1.
 
 Version 0.99.1 (not publicly released)
+
   2019-10-23
   1. Created version 0.99.1.
 
 Version 0.99.0 (not publicly released)
+
   2019-10-20
   1. Created version 0.99.0, the first version of the package.

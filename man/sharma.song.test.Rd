@@ -1,6 +1,6 @@
 \name{sharma.song.test}
 \alias{sharma.song.test}
-\title{Sharma-Song Test for Second-Order Distributional Differences Across Contingency Tables}
+\title{Sharma-Song Test for Second-Order Difference Across Contingency Tables}
 
 \description{
 Across given contingency tables, the test admits only second-order difference in the joint distributions underlying the tables.
@@ -15,7 +15,9 @@ Across given contingency tables, the test admits only second-order difference in
 }
 
 \details{
-      The Sharma-Song test determines whether the patterns underlying multiple input contingency tables are second-order differential. Its null test statistic is proved to asymptotically follow the chi-squared distribution.
+      The Sharma-Song test determines whether the patterns underlying multiple input contingency tables are second-order differential. Its null test statistic is proved to asymptotically follow the chi-squared distribution \insertCite{sharma2020COPTYP}{DiffXTables}.
+      
+      The test statistic is minimized to zero if and only if the deviation of observed from expected counts normalized by the square root of expected count is equal in the same entry across all tables.
 }
 
 \value{
@@ -26,11 +28,19 @@ Across given contingency tables, the test admits only second-order difference in
 \item{p.value}{p-value of the Sharma-Song test, computed using the chi-squared distribution.}
 }
 
-\seealso{
-The comparative chi-squared test \code{\link[DiffXTables]{cp.chisq.test}}.
 
-The heterogeneity test \code{\link[DiffXTables]{heterogeneity.test}}.
+\references{
+\insertAllCited{} 
 }
+
+
+\seealso{
+\code{\link[DiffXTables]{cp.chisq.test}}, \code{\link[DiffXTables]{heterogeneity.test}},  \code{\link[DiffXTables]{strength.test}}, \code{\link[DiffXTables]{marginal.change.test}}, and
+\code{\link[DiffXTables]{type.analysis}}.
+}
+
+
+
 
 \examples{
   # Two second-order differential tables:

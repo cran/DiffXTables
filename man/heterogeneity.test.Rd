@@ -1,7 +1,7 @@
 \name{heterogeneity.test}
 \alias{heterogeneity.test}
 
-\title{Heterogeneity Test for Distributional Differences Across Contingency Tables}
+\title{Heterogeneity Test for Difference Across Contingency Tables}
 
 \description{
 Across given contingency tables, the test admits any type of differences in either the joint or marginal distributions of the tables.}

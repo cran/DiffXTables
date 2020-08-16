@@ -7,6 +7,9 @@
 #    simulator function.
 #  March 18, 2020. Improved readability of code.
 #  March 19, 2020. More tests are added for the simulator function.
+#  July 17, 2020. Added test cases for marginal.change.test
+#  July 20, 2020. Added test cases for strength.test
+#  July 21, 2020. Added test cases for type.analysis method.
 
 library(testthat)
 library(DiffXTables)
@@ -153,6 +156,50 @@ test_that("Testing sharma.song.test", {
   h1 <- cp.chisq.test(x.exp)
   h <- cp.chisq.test(x)
 
+  # First row and first column are zero
+  x <- list(
+    matrix(c(0, 0, 0,
+             0, 3, 0,
+             4, 0, 3), nrow = 3, byrow=T),
+    matrix(c(0, 0, 3,
+             0, 3, 5,
+             0, 0, 5), nrow = 3, byrow=T)
+  )
+  
+  h2 <- sharma.song.test(x)
+  x.exp <- lapply(x, expected)
+  h1 <- cp.chisq.test(x.exp)
+  h <- cp.chisq.test(x)
+  
+  ## Only one non-zero value in the column
+  x <- list(
+    matrix(data = c(410,39,0,
+                    46, 5, 0,
+                    0, 0, 0), nrow = 3, ncol = 3), 
+    matrix(data = c(430,21,0,
+                    35,11,0,
+                    1, 0, 1), nrow = 3, ncol = 3)
+  )
+  h2 <- sharma.song.test(x)
+  expect_equivalent(signif(h2$p.value, 8),
+                    pchisq(33.136, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h2$statistic, 8), 33.1, tolerance = 0.0362 )
+  expect_equivalent(h2$parameter, 4)
+  
+  
+  x <- list(
+    matrix(data = c(434,24,1,
+                    14,26, 0,
+                    0, 1, 0), nrow = 3, ncol = 3), 
+    matrix(data = c(434,24,0,
+                    14,26,0,
+                    0, 0, 0), nrow = 3, ncol = 3)
+  )
+  h2 <- sharma.song.test(x)
+  expect_equivalent(signif(h2$p.value, 8),
+                    pchisq(254.95, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h2$statistic, 8), 255, tolerance = 0.0496 )
+  expect_equivalent(h2$parameter, 4)
 })
 
 context("Testing cp.chisq.test()")
@@ -250,8 +297,8 @@ test_that("Testing heterogeneity test", {
   )
   h <- heterogeneity.test(x)
   expect_equivalent(signif(h$p.value, 8), 
-                    pchisq(9, 1, lower.tail=FALSE))
-  expect_equivalent(signif(h$statistic, 8), 9)
+                    pchisq(16, 1, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 16)
   expect_equivalent(h$parameter, 1)
 
   # all zero matrices
@@ -387,4 +434,186 @@ test_that("Testing simulate_diff_tables method", {
   
 })
 
+context("Testing marginal.change.test()")
+
+# Testing marginal.change.test
+test_that("Testing marginal.change.test method", {
+  
+  # Same marginal 
+  x <- list(
+    matrix(c(4,0,
+             0,4), nrow=2),
+    matrix(c(0,4,
+             4,0), nrow=2)
+  )
+  h <- marginal.change.test(x)
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 2)
+  
+  # 2X2 all zeros 
+  x <- list(
+    matrix(c(0,0,
+             0,0), nrow=2),
+    matrix(c(0,0,
+             0,0), nrow=2)
+  )
+  h <- marginal.change.test(x)
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 0)
+  
+  ## Conserved pattern
+  x0 <- matrix(c(4,0,0,
+                 0,4,0,
+                 0,0,4), nrow=3)
+  
+  x <- list(x0, x0, x0)
+  
+  h <- marginal.change.test(x)
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 8)
+  
+  ## Marginal table example
+  x0 <- matrix(c(8,0,0,
+                 0,10,0,
+                 0,0,20), nrow=3)
+  
+  x1 <- matrix(c(8,0,0,
+                 0,20,0,
+                 0,0,10), nrow=3)
+  
+  x <- list(x0, x1, x0)
+  h <- marginal.change.test(x)
+  expect_equivalent(signif(h$p.value, 8), 0.02122649  )
+  expect_equivalent(signif(h$statistic, 8),  18 )
+  expect_equivalent(h$parameter, 8)
+  
+  ## Marginal table example
+  x0 <- matrix(c(0,30,0,
+                 0,10,0,
+                 0,0,0), nrow=3)
+  
+  x1 <- matrix(c(0,0,20,
+                 0,50,0,
+                 10,0,0), nrow=3)
+  
+  x <- list(x0, x1)
+  h <- marginal.change.test(x)
+  expect_equivalent(signif(h$p.value, 8), 7.424e-10)
+  expect_equivalent(signif(h$statistic, 8), 48.5 )
+  expect_equivalent(h$parameter, 4)
+  
+})
+
+context("Testing strength.test()")
+
+# Testing strength.test
+test_that("Testing strength.test method", {
+
+   x <- list(
+     matrix(c(30,0,0,
+              0,10,0,
+              0,0,20), nrow=3),
+     matrix(c(10,0,0,
+               0,20,0,
+               0,0,30), nrow=3)
+  )
+  h <- strength.test(x)
+  expect_equivalent(signif(h$p.value, 8), 2.264417e-47)
+  expect_equivalent(signif(h$statistic, 8), 240)
+  expect_equivalent(h$parameter, 8)
+
+  # One table has strong association:
+  x <- list(
+      matrix(c(4,0,0,
+               0,4,0,
+               0,0,4), nrow=3),
+      matrix(c(4,0,4,
+               8,4,8,
+               4,0,4), nrow=3)
+  )
+  h <- strength.test(x)
+  expect_equivalent(signif(h$p.value, 8), 0.0005566)
+  expect_equivalent(signif(h$statistic, 8), 27.6)
+  expect_equivalent(h$parameter, 8)
+
+  # Both tables has no association:
+  x <- list(
+      matrix(c(4,0,4,
+               8,4,8,
+               4,0,4), nrow=3),
+      matrix(c(4,0,4,
+               8,4,8,
+               4,0,4), nrow=3)
+  )
+  h <- strength.test(x)
+  expect_equivalent(signif(h$p.value, 8), 0.5152161)
+  expect_equivalent(signif(h$statistic, 8), 7.2)
+  expect_equivalent(h$parameter, 8)
+})
+
+
+
+
+context("Testing type.analysis()")
+
+# Testing association.order.ana method 
+test_that("Testing type.analysis method", {
+  
+  # Type-2 example 
+  x <- list(
+    matrix(c(20,0,
+             0,20), nrow=2),
+    matrix(c(0,20,
+             20,0), nrow=2)
+  )
+  invisible(h <- type.analysis(x, 0.05))
+  expect_equivalent(h$Type, 2)
+  
+  # Type Null example 
+  x <- list(
+    matrix(c(0,0,
+             0,0), nrow=2),
+    matrix(c(0,0,
+             0,0), nrow=2)
+  )
+  h <- type.analysis(x, 0.05)
+  expect_equivalent(h$Type, NULL)
+  
+  # Type Null example 
+  x <- list(
+    matrix(c(2,4,
+             4,8), nrow=2),
+    matrix(c(2,4,
+             4,8), nrow=2)
+  )
+  h <- type.analysis(x, 0.05)
+  expect_equivalent(h$Type, NULL)
+  
+  ## Type-0 example
+  x0 <- matrix(c(4,0,0,
+                 0,4,0,
+                 0,0,4), nrow=3)
+  
+  x <- list(x0, x0, x0)
+  
+  h <- type.analysis(x, 0.05)
+  expect_equivalent(h$Type, 0)
+  
+  ## Type-1 example
+  x0 <- matrix(c(8,0,0,
+                 0,10,0,
+                 0,0,20), nrow=3)
+  
+  x1 <- matrix(c(8,0,0,
+                 0,20,0,
+                 0,0,10), nrow=3)
+  
+  x <- list(x0, x1, x0)
+  h <- type.analysis(x, 0.05)
+  expect_equivalent(h$Type, 1)
+  
+})
 

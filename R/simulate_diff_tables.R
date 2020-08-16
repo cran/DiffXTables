@@ -1,3 +1,5 @@
+# simulate_diff_tables.R
+#
 # simulate_diff_tables --   Differential patterns
 # Method to simulate first, second and full order differential tables
 # Input : Number of tables and number of conditions

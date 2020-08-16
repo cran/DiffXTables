@@ -15,6 +15,10 @@
 # 
 #   March 18, 2020: The rank of the covariance matrix is always
 #     K-1. No need to compute the rank numerically.
+#
+#   May 14, 2020: Corrected the normalized frequence table A inside 
+#     function get.e.mat() when an entry has both zero row and zero 
+#     column sums.
 
 #######################################
 #### Imports for the whole package ####
@@ -31,7 +35,7 @@ sharma.song.test <- function(tables)
 
   for(k in 1:(length(tables)-1)){
     if(!identical(dim(tables[[k]]), dim(tables[[k+1]])))
-    stop("All matries must have identical dimensions!")
+    stop("All matrices must have identical dimensions!")
   }
 
   # Get independent standard normal variables (E matrix) using Helmert tranfrom 
@@ -108,29 +112,42 @@ get.e.mat <- function(tables)
 
   for(k in seq(K)) {
 
-    # Calculating expected table and normalized table of sampled data
-
-    expec <- expected(tables[[k]])
-
-    A <- (tables[[k]] - expec) / sqrt(ifelse(expec == 0, 1, expec))
-
-    rowSum <- rowSums(expec)
-    colSum <- colSums(expec)
+    # Obtain row and column Helmert matrices
+    rowSum <- rowSums(tables[[k]])  # (expec)
+    colSum <- colSums(tables[[k]])  # (expec)
     totalSum <- sum(rowSum)
 
     prdot <- rowSum / totalSum
     pcdot <- colSum / totalSum
 
-    # Obtaining row and column Helmert matrices
     V <- helmert.matrix(prdot)
     W <- helmert.matrix(pcdot)
 
-    # Product of row and column helmert matrix with normalized sampled data
+    # Calculate expected table
+    expec <- expected(tables[[k]])
+    
+    # Get normalized frequency table of sampled data
+    A <- (tables[[k]] - expec) / sqrt(ifelse(expec == 0, 1, expec))
+    
+    # Correct the frequency for zero entries with both 
+    #   a zero row sum and a zero column sum.
+    for(r in seq_along(rowSum)) {
+       if(rowSum[r] != 0) next 
+      for(c in seq_along(colSum)) {
+         if(colSum[c] == 0) A[r, c] <- sqrt(totalSum)
+      }
+     }
+
+    # Transform normalized frequency matrix A to independent normal 
+    #   variables by multiplying row and column helmert matrices
     E <- V %*% A %*% t(W)
 
+    # Remove the first row and first column from E, which
+    #   are alwarys zero. The other entries in E are random normal
+    #   variables.
     E <- E[-1, -1]
 
-    # List of E vector
+    # Vectorize E in column major 
     EList[[k]] <- as.vector(E)
 
     n[k] <- totalSum
@@ -146,13 +163,12 @@ expected <- function(table)
   totalSum = sum(rowSum)
   prod = outer(rowSum, colSum, "*")
 
-  # t <-  ifelse(prod==0, 0, prod/totalSum)
-  # return (t)
   if(totalSum != 0) {
     Exp <- prod / totalSum
   } else {
     Exp <- prod
   }
+  
   return (Exp)
 }
 
@@ -169,9 +185,19 @@ helmert.matrix <- function(p)
     for(i in 2:n) {
       sumpi <- sumpi.minus.1 + p[i]
 
-      L[i,i] <- - sqrt(ifelse (sumpi.minus.1 == 0, 0, sumpi.minus.1  / sumpi) )
+      # L[i,i] <- - sqrt(sumpi.minus.1  / sumpi) 
+      L[i,i] <- - sqrt(
+       ifelse(sumpi.minus.1 == 0,
+              0,
+              sumpi.minus.1  / sumpi) )
 
-      L[i,1:(i-1)] <- sqrt( ifelse( (p[i]*p[1:(i-1)]) == 0, 0, (p[i]*p[1:(i-1)])  / (sumpi.minus.1 * sumpi) ) )
+      # L[i,1:(i-1)] <- sqrt(p[i] * p[1:(i-1)] / (sumpi.minus.1 * sumpi))
+      
+      L[i,1:(i-1)] <- sqrt(
+        ifelse( p[i] * p[1:(i-1)] == 0,
+                0,
+                p[i] * p[1:(i-1)] / (sumpi.minus.1 * sumpi)
+              ) )
 
       sumpi.minus.1 <- sumpi
     }
