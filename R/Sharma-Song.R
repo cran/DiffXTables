@@ -16,9 +16,23 @@
 #   March 18, 2020: The rank of the covariance matrix is always
 #     K-1. No need to compute the rank numerically.
 #
-#   May 14, 2020: Corrected the normalized frequence table A inside 
+#   May 14, 2020: Corrected the normalized frequency table A inside 
 #     function get.e.mat() when an entry has both zero row and zero 
 #     column sums.
+#
+#   December 17, 2020: 
+#   Introduced a new parameter to select the marginal distribution of the 
+#   tables in null population.
+#   Two options for null.table.marginal:
+#   observed: Utilizes the observed marginal in null population to determine the
+#   second order differential patterns [default]
+#   uniform: Utilizes the uniform marginal in null population to determine the
+#   second order differential patterns.
+#   
+#   April 20, 2021: 
+#   Introduced a boolean parameter 'compensated' to avoid the issue of upwards bias 
+#   originating due to small expected value (Cochran's condition). Default is FALSE.
+  
 
 #######################################
 #### Imports for the whole package ####
@@ -27,7 +41,8 @@
 #######################################
 
 #' @export
-sharma.song.test <- function(tables)
+sharma.song.test <- function(tables, null.table.marginal = c("observed", "uniform"),
+                             compensated = FALSE)
 {
   if (mode(tables) != "list" || length(tables) < 2) {
     stop("Input must be a list of 2 or more matrices!")
@@ -37,9 +52,25 @@ sharma.song.test <- function(tables)
     if(!identical(dim(tables[[k]]), dim(tables[[k+1]])))
     stop("All matrices must have identical dimensions!")
   }
+  
+  DNAME <- deparse(substitute(tables))
+  
+  if(compensated){
+    tables = lapply(tables, function(X){
+        X = X+(1/prod(dim(X)))
+    })
+  }
 
+  null.table.marginal <- match.arg(null.table.marginal)
   # Get independent standard normal variables (E matrix) using Helmert tranfrom 
-  EN <- get.e.mat(tables)
+  if(null.table.marginal == "uniform"){
+    EN <- get.e.mat.uni(tables)
+    type <- "Null table marginal is uniform"
+  }else{
+    EN <- get.e.mat.obs(tables)
+    type <- "Null table marginal is observed"
+  }
+  
   n <- EN$SamS
 
   if(all(n >= 0) && any(n > 0)) {
@@ -92,19 +123,19 @@ sharma.song.test <- function(tables)
 
   names(Stat) <- "X-squared"
   names(Df) <- "df"
-  DNAME <- deparse(substitute(tables))
-
+  
   return(structure(list(
     statistic = Stat,
     parameter = Df,
     p.value = P.val,
     data.name = DNAME,
-    method = "Sharma-Song Test for Second-Order Differential Contingency Tables"),
+    method = paste("Sharma-Song Test for Second-Order Differential 
+                   Contingency Tables","\n", type)),
     class = "htest"))
 }
 
 
-get.e.mat <- function(tables)
+get.e.mat.obs <- function(tables)
 { 
   K <- length(tables)
   EList <- vector("list", length = K)
@@ -113,15 +144,9 @@ get.e.mat <- function(tables)
   for(k in seq(K)) {
 
     # Obtain row and column Helmert matrices
-    rowSum <- rowSums(tables[[k]])  # (expec)
-    colSum <- colSums(tables[[k]])  # (expec)
+    rowSum <- rowSums(tables[[k]])  
+    colSum <- colSums(tables[[k]])
     totalSum <- sum(rowSum)
-
-    prdot <- rowSum / totalSum
-    pcdot <- colSum / totalSum
-
-    V <- helmert.matrix(prdot)
-    W <- helmert.matrix(pcdot)
 
     # Calculate expected table
     expec <- expected(tables[[k]])
@@ -131,30 +156,81 @@ get.e.mat <- function(tables)
     
     # Correct the frequency for zero entries with both 
     #   a zero row sum and a zero column sum.
-    for(r in seq_along(rowSum)) {
-       if(rowSum[r] != 0) next 
-      for(c in seq_along(colSum)) {
-         if(colSum[c] == 0) A[r, c] <- sqrt(totalSum)
-      }
-     }
-
-    # Transform normalized frequency matrix A to independent normal 
-    #   variables by multiplying row and column helmert matrices
-    E <- V %*% A %*% t(W)
-
-    # Remove the first row and first column from E, which
-    #   are alwarys zero. The other entries in E are random normal
-    #   variables.
-    E <- E[-1, -1]
+    #for(r in seq_along(rowSum)) {
+    #   if(rowSum[r] != 0) next 
+    #  for(c in seq_along(colSum)) {
+    #     if(colSum[c] == 0) A[r, c] <- sqrt(totalSum)
+    #  }
+    # }
 
     # Vectorize E in column major 
-    EList[[k]] <- as.vector(E)
+    EList[[k]] <- get.e.mat(rowSum, colSum, totalSum, A)
 
     n[k] <- totalSum
   }
   return(list(SamS = n, EList = EList))
 }
 
+
+
+get.e.mat.uni <- function(tables)
+{ 
+  K <- length(tables)
+  EList <- vector("list", length = K)
+  n <- vector("numeric", length = K)
+  
+  for(k in seq(K)) {
+    
+    # Obtain row and column Helmert matrices
+    rowSum <- rowSums(tables[[k]])  # (expec)
+    colSum <- colSums(tables[[k]])  # (expec)
+    totalSum <- sum(rowSum)
+    
+    R <- length(rowSum)
+    S <- length(colSum)
+    
+    uniformSamp <- (totalSum)/(R*S)
+    unimat = matrix(data = rep( uniformSamp,R*S), nrow = R, ncol = S)
+    
+    rowSum <- rowSums(unimat)  
+    colSum <- colSums(unimat) 
+    
+    # Calculate expected table
+    expec <- expected(tables[[k]])
+    
+    # Get normalized frequency table of sampled data
+    A <- (tables[[k]] - expec) / sqrt(ifelse( uniformSamp == 0, 1,  uniformSamp))
+    
+    # Vectorize E in column major 
+    EList[[k]] <- get.e.mat(rowSum, colSum, totalSum, A) 
+    
+    n[k] <- totalSum
+  }
+  return(list(SamS = n, EList = EList))
+}
+
+get.e.mat <- function(rowSum, colSum, totalSum, A){
+  
+  prdot <- rowSum / totalSum
+  pcdot <- colSum / totalSum
+  
+  V <- helmert.matrix(prdot)
+  W <- helmert.matrix(pcdot)
+  
+  
+  # Transform normalized frequency matrix A to independent normal 
+  #   variables by multiplying row and column helmert matrices
+  E <- V %*% A %*% t(W)
+  
+  # Remove the first row and first column from E, which
+  #   are alwarys zero. The other entries in E are random normal
+  #   variables.
+  E <- E[-1, -1]
+  
+  E <- as.vector(E)
+  return(E)
+  
+}
 
 expected <- function(table)
 {

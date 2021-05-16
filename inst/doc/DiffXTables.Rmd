@@ -1,7 +1,7 @@
 ---
 title: "Using the 'DiffXTables' R package to detect heterogeneity"
-author: "Ruby Sharma and Joe Song"
-date: "Created October 22, 2019; Updated November 10, 2019; March 19, 2020"
+author: Ruby Sharma and Joe Song
+date: "Created October 22, 2019; Updated May 14, 2021; November 10, 2019; March 19, 2020"
 output: rmarkdown::html_vignette
   #pdf_document:
     #latex_engine: xelatex
@@ -59,7 +59,7 @@ It is implemented as the R function `cp.chisq.test()` in this package.
 
 Alternative hypothesis H2: Patterns represented by the tables are **second-order differential**.
 
-A manuscript describing the theoretical foundation of this test is being submitted for peer review.
+The test detects differential departure from independence via second-order difference in the joint distributions underlying two or more contingency tables. The test is fully described in [(Sharma et al. 2021) <doi:10.1093/bioinformatics/btab240>](https://doi.org/10.1093/bioinformatics/btab240).
 
 It is implemented as the R function `sharma.song.test()` in this package.
 

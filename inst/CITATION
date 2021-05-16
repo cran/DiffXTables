@@ -1,7 +1,7 @@
 bibentry(
   bibtype="Article",
   key = "song2014hunting",
-  header = "To cite the comparative chi-squared test in publications use:",
+  header = "To cite the comparative chi-squared test in publications, use",
   title = "Hunting complex differential gene interaction patterns across molecular contexts",
   journal = "Nucleic Acids Research",
   year = "2014",
@@ -33,20 +33,20 @@ bibentry(
 
 bibentry(
   bibtype="Manual",
-  key = "sharma2020diffxtables",
-  header = "To cite the Sharma-Song test in publications use:",
+  key = "sharma2021diffxtables",
+  header = "To cite the entire package in publications, use",
   title = "DiffXTables: Pattern Analysis Across Contingency Tables",
   author = c(person("Ruby", "Sharma"),
-             person("Mingzhou", "Song")),
-  year = "2020",
-  note = "R package",
+             person("Joe", "Song")),
+  year = "2021",
+  note = "Comprehensive R Archive Network. R package",
   url = "https://CRAN.R-project.org/package=DiffXTables"
 )
 
 bibentry(
   bibtype="inproceedings",
   key = "sharma2020COPTYP",
-  header = "To cite the marginal-change test, the strength test, and type analysis on multiple contingency tables in publications use:",
+  header = "To cite the marginal-change test, the strength test, and type analysis on multiple contingency tables in publications, use",
   author = c(person("Ruby", "Sharma"),
              person("Xuye", "Luo"),
              person("Sajal", "Kumar"),
@@ -54,5 +54,31 @@ bibentry(
 	booktitle = "Proceedings of the 11th ACM International Conference on Bioinformatics, Computational Biology, and Health Informatics {(BCB '20)}",
 	title = "Three co-expression pattern types across microbial transcriptional networks of plankton in two oceanic waters",
 	year = "2020",
-	note = "In press"
+        isbn = "9781450379649",
+        articleno = "14",
+        numpages = "10",
+        publisher = "Association for Computing Machinery",
+        address = "New York, NY, USA",
+        url = "https://doi.org/10.1145/3388440.3412485",
+        doi = "10.1145/3388440.3412485",
+        keywords = "Planktonic microbial community, Metatranscriptome, Oceanic ecosystem,      
+        Co-expression network, First-order differential pattern",
+        location = "Virtual Event, USA",
+        series = "BCB '20"
 )
+
+bibentry(
+        bibtype="Article",
+        Key = "ruby2021/BIOINF-2020-0795",
+        header = "To cite the Sharma-Song test    
+        in publications, use",
+	author = c(person("Ruby", "Sharma"),
+                   person("Sajal", "Kumar"),
+                   person("Mingzhou", "Song")),
+        title = "Fundamental gene network rewiring at the second order within and across mammalian systems",
+	year = "2021",
+        journal = "Bioinformatics",
+	doi = "10.1093/bioinformatics/btab240"
+		
+)
+

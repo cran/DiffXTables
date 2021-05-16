@@ -3,21 +3,28 @@
 \title{Sharma-Song Test for Second-Order Difference Across Contingency Tables}
 
 \description{
-Across given contingency tables, the test admits only second-order difference in the joint distributions underlying the tables.
+The test detects differential departure from independence via second-order difference in joint distributions underlying two or more contingency tables.
 }
 
 \usage{
-  sharma.song.test(tables)
+sharma.song.test(
+  tables, null.table.marginal = c("observed", "uniform"), 
+  compensated = FALSE
+)
 }
 
 \arguments{
   \item{tables}{a list of at least two non-negative matrices or data frames representing contingency tables of the same dimensions.}
+  \item{null.table.marginal}{a character string to specify marginal distributions of null tables. The options are \code{"observed"}(default) and \code{"uniform"}.}
+  \item{compensated}{a logical value to compensate for the Cochran's condition. It is only used if \code{null.table.marginal="observed"}. Default is FALSE.}
 }
 
 \details{
-      The Sharma-Song test determines whether the patterns underlying multiple input contingency tables are second-order differential. Its null test statistic is proved to asymptotically follow the chi-squared distribution \insertCite{sharma2020COPTYP}{DiffXTables}.
-      
-      The test statistic is minimized to zero if and only if the deviation of observed from expected counts normalized by the square root of expected count is equal in the same entry across all tables.
+      The Sharma-Song test determines whether the patterns underlying multiple input contingency tables are second-order differential. The test statistic measures differential departure form independence. Its null test statistic is proved to asymptotically follow the chi-squared distribution. For full detail of the test, see \insertCite{ruby2021/BIOINF-2020-0795}{DiffXTables}.
+
+      If \code{null.table.marginal} is set to \code{"observed"}, the null hypothesis uses the observed marginals. The \code{compensated} parameter, if set to \code{TRUE}, adds a small constant to each entry of the tables to address the Cochran's condition that the expected count in any table entry is 5 or less. %It can detect all differential patterns.
+
+      If the \code{null.table.marginal} is set to \code{"uniform"}, the null tables are set to have uniform marginals. No longer suffering from the Cochran's condition, it detects second-order differential patterns with additional robustness. 
 }
 
 \value{
@@ -66,7 +73,7 @@ Across given contingency tables, the test admits only second-order difference in
              45, 18, 81, 18,
              25, 10, 45, 10), nrow=4)
   )
-  sharma.song.test(tables)
+  sharma.song.test(tables, null.table.marginal = "uniform")
 }
 
 \author{

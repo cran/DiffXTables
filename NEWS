@@ -1,5 +1,45 @@
 NEWS
 
+Version 0.1.3
+
+  2021-05-14
+  1. Updated user manuals, README, DESCRIPTION, and the vignette.
+  
+  2021-04-28
+  1. Added the citation to the Bioinformatics paper describing 
+     Sharma-Song test with observed null table marginals in 
+     DESCRIPTION, CITATION, REFERENCES.bib, and README.md files. 
+  2. Introduced a boolean parameter to compensate the issue of Cochran's
+     condition of samples value less than 5 in any cell.
+  
+  2020-12-24
+  1. Updated DESCRIPTION
+  2. Introduced null.table.marginal parameter to use the
+     sharma.song.test with observed and uniform marginal null
+     population.
+  
+  3. No longer using the correction of normalized frequency table A
+     inside function get.e.mat()
+  4. Added test cases for the uniform marginal null tables.
+  5. Added test cases for parameter compensated parameter.
+  6. Updated the user manual for sharma.song.test() function.
+  7. Added full citation information and DOI number for the 
+     first-order marginal change test ACM paper (Sharma et al, 2020)
+     in DESCRIPTION, CITATION, REFERENCES.bib, and README.md files.
+  8. stats::chisq.test() is no longer called inside function
+     chisq.test.stat(). This reduce the overhead in chisq.test(), as we
+     only need to compute the Pearson chi-squared test statistic.
+  
+
+  2020-12-16
+  1. Created version 0.1.3 from 0.1.2
+
+Version 0.1.2
+
+  2020-08-16
+  1. Created version 0.1.2 from 0.1.1
+  2. Fixed a NOTE stating Rdpack package was imported but not used.
+  
 Version 0.1.1
   
   2020-08-11

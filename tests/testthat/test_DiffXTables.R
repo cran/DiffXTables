@@ -10,6 +10,8 @@
 #  July 17, 2020. Added test cases for marginal.change.test
 #  July 20, 2020. Added test cases for strength.test
 #  July 21, 2020. Added test cases for type.analysis method.
+#  December 17, 2020, Added test cases for uniform null table marginal.
+#  April 20, 2021, Added test cases for compensated sharma.song test.
 
 library(testthat)
 library(DiffXTables)
@@ -171,7 +173,24 @@ test_that("Testing sharma.song.test", {
   h1 <- cp.chisq.test(x.exp)
   h <- cp.chisq.test(x)
   
-  ## Only one non-zero value in the column
+  ## Only one non-zero value in the column, using compensated 
+  ## parameter
+  
+  x <- list(
+    matrix(c(30,20,0,
+             10,5,0,
+             0,0,0),  ncol = 3),
+    matrix(c(30,20,0,
+             10,5,0,
+             0,0,1), ncol = 3)
+  )
+  h2 <- sharma.song.test(x, compensated = TRUE)
+  expect_equivalent(signif(h2$p.value, 8),
+                    pchisq(8.320419, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h2$statistic, 8), 8.32, tolerance = 0.0362 )
+  expect_equivalent(h2$parameter, 4)
+  
+  
   x <- list(
     matrix(data = c(410,39,0,
                     46, 5, 0,
@@ -180,9 +199,9 @@ test_that("Testing sharma.song.test", {
                     35,11,0,
                     1, 0, 1), nrow = 3, ncol = 3)
   )
-  h2 <- sharma.song.test(x)
+  h2 <- sharma.song.test(x, compensated = TRUE)
   expect_equivalent(signif(h2$p.value, 8),
-                    pchisq(33.136, 4, lower.tail=FALSE))
+                    pchisq(33.518, 4, lower.tail=FALSE))
   expect_equivalent(signif(h2$statistic, 8), 33.1, tolerance = 0.0362 )
   expect_equivalent(h2$parameter, 4)
   
@@ -195,11 +214,123 @@ test_that("Testing sharma.song.test", {
                     14,26,0,
                     0, 0, 0), nrow = 3, ncol = 3)
   )
-  h2 <- sharma.song.test(x)
+  h2 <- sharma.song.test(x, compensated = TRUE)
   expect_equivalent(signif(h2$p.value, 8),
-                    pchisq(254.95, 4, lower.tail=FALSE))
-  expect_equivalent(signif(h2$statistic, 8), 255, tolerance = 0.0496 )
+                    pchisq(18.6914, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h2$statistic, 8), 18.7, tolerance = 0.0496 )
   expect_equivalent(h2$parameter, 4)
+  
+  #### Testing sharma.song.test with uniform marginal in null population
+  
+  # 2X2 matrix test
+  x <- list(
+    matrix(c(4,0,
+             0,4), nrow=2),
+    matrix(c(0,4,
+             4,0), nrow=2)
+  )
+  h <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h$p.value, 8), 
+                    pchisq(16, 1, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 16)
+  expect_equivalent(h$parameter, 1)
+  
+  x <- list(
+    matrix(c(0,0,
+             0,0), nrow=2),
+    matrix(c(0,0,
+             0,0), nrow=2)
+  )
+  h <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 0)
+  
+  
+  # second-order differential patterns
+  x <- list(
+    matrix(c(4,0,0,
+             0,4,0,
+             0,0,4), nrow=3),
+    matrix(c(0,4,4,
+             4,0,4,
+             4,4,0), nrow=3)
+  )
+  
+  h <- sharma.song.test(x, null.table.marginal = "uniform")
+  
+  expect_equivalent(signif(h$p.value, 8),
+                    pchisq(36, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h$statistic, 8), 36)
+  expect_equivalent(h$parameter, 4)
+  
+  
+  
+  
+  # indepdendent differential patterns
+  x <- list(
+    matrix(c(16, 4, 20,
+             4, 1,  5,
+             20, 5, 25), nrow = 3, byrow = TRUE),
+    matrix(c(1, 1,  8,
+             1, 1,  8,
+             8, 8, 64), nrow = 3, byrow = TRUE)
+  )
+  
+  h <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h$p.value, 8), 1)
+  expect_equivalent(signif(h$statistic, 8), 0)
+  expect_equivalent(h$parameter, 4)
+  
+  ## Only one non-zero value in the column, using uniform null distribution 
+  ## to demote sparse patterns.
+  x <- list(
+    matrix(c(411,37,0,
+             47,5,0,
+             0,0,0), byrow = 3, ncol = 3),
+    matrix(c(431,21,0,
+             35,11,0,
+             1,0,1), byrow = 3, ncol = 3)
+  )
+  h <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h$p.value, 8), 
+                    pchisq(2.0874, 4, lower.tail=FALSE), tolerance = 0.0005)
+  expect_equivalent(signif(h$statistic, 8), 2.0874, tolerance = 0.0496 )
+  expect_equivalent(h$parameter, 4)
+  
+  ## Only one non-zero value in the row, using uniform null distribution 
+  ## to demote these kind of patterns
+  x <- list(
+    matrix(data = c(434,24,1,
+                    14,26, 0,
+                    0, 1, 0), nrow = 3, ncol = 3), 
+    matrix(data = c(434,24,0,
+                    14,26,0,
+                    0, 0, 0), nrow = 3, ncol = 3)
+  )
+  h2 <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h2$p.value, 8),
+                    pchisq(0.0242, 4, lower.tail=FALSE), tolerance = 0.0005)
+  expect_equivalent(signif(h2$statistic, 8), 0.0242, tolerance = 0.0496)
+  expect_equivalent(h2$parameter, 4)
+  
+  
+  x <- list(
+    matrix(c(
+      55,  1,  0,
+      0,  110,  0,
+      0,  0, 16), byrow=TRUE, nrow=3),
+    matrix(c(
+      13,  0,  0,
+      0,  83,  0,
+      1,  0,  84), byrow=TRUE, nrow=3)
+  )
+  h2 <- sharma.song.test(x, null.table.marginal = "uniform")
+  expect_equivalent(signif(h2$p.value, 8),
+                    pchisq(117.43, 4, lower.tail=FALSE))
+  expect_equivalent(signif(h2$statistic, 8), 117.43, tolerance = 0.0496 )
+  expect_equivalent(h2$parameter, 4)
+  
 })
 
 context("Testing cp.chisq.test()")

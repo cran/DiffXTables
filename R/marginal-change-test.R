@@ -7,6 +7,8 @@
 # Date Created: May 17 2020
 # Updated: August 2, 2020. MS. Turned off correction on 2x2 tables.
 
+#' @importFrom  Rdpack reprompt
+
 #' @export
 marginal.change.test <- function(tables)
 {
